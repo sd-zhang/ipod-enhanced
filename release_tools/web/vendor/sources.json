@@ -1,0 +1,70 @@
+{
+  "rom_patcher": {
+    "repository": "https://github.com/marcrobledo/RomPatcher.js",
+    "commit": "4f17297cd1dc0835a0b0747497fa15f5f63f1623"
+  },
+  "pako": {
+    "repository": "https://github.com/nodeca/pako",
+    "version": "2.1.0"
+  },
+  "local_modifications": [
+    {
+      "file": "BinFile.js",
+      "change": "Respect typed-array byteOffset and byteLength, including the bounded views returned by the bzip decoder."
+    },
+    {
+      "file": "RomPatcher.format.bdf.js",
+      "change": "Grow the embedded bzip decoder output to fit an entire RLE run when doubling alone is insufficient."
+    },
+    {
+      "file": "RomPatcher.format.bdf.js",
+      "change": "Bound untrusted bzip input, block and output sizes; include byte 255 in its alphabet; validate BSDIFF signed 64-bit controls, intermediate source offsets and stream lengths; preserve zero-valued source bytes outside the original extent."
+    },
+    {
+      "file": "RomPatcher.format.bdf.js",
+      "change": "Validate the combined bzip stream CRC, zero padding and exact compressed input consumption; reject appended data or concatenated streams."
+    },
+    {
+      "file": "RomPatcher.format.bdf.js",
+      "change": "Reject invalid initial or adjusted Huffman lengths, exhausted selectors and unmatched symbols immediately; refill enough bits for each bounded code length."
+    }
+  ],
+  "files": [
+    {
+      "file": "BinFile.js",
+      "sha256": "7053f472ba34d565dd8f1b504c4ede2880844ff01ec82e53059aad202acd2dce",
+      "project": "Rom Patcher JS",
+      "upstream_sha256": "3856e2f30bb8f105796a0371231a9b2aa37266148ac496711f07fd1e80fef688"
+    },
+    {
+      "file": "RomPatcher.format.bdf.js",
+      "sha256": "5403370b8ed5661cdc8d3838326e297450e6a8ab26b2d7e30afab91faa9191b4",
+      "project": "Rom Patcher JS and embedded SheetJS bz2",
+      "upstream_sha256": "b897f36013a4308fd182a6508594fbb48da0afcf310dc97293973cb67e4fc5c3"
+    },
+    {
+      "file": "rom-patcher-LICENSE.txt",
+      "sha256": "a379dd012587a2fbe434ea6fcef30f502f32077738c2bd36e9e20cce621162bb",
+      "project": "Rom Patcher JS",
+      "upstream_sha256": "a379dd012587a2fbe434ea6fcef30f502f32077738c2bd36e9e20cce621162bb"
+    },
+    {
+      "file": "pako.min.js",
+      "sha256": "ede2693a4a6a5126b9d35669062b358ecab6ae7b9b86a1cf302feb45a8514907",
+      "project": "pako",
+      "upstream_sha256": "ede2693a4a6a5126b9d35669062b358ecab6ae7b9b86a1cf302feb45a8514907"
+    },
+    {
+      "file": "pako-LICENSE.txt",
+      "sha256": "a04665b3b2de56c66730c1f720f528175739e4104f79073614aa611da1e85539",
+      "project": "pako",
+      "upstream_sha256": "a04665b3b2de56c66730c1f720f528175739e4104f79073614aa611da1e85539"
+    },
+    {
+      "file": "pako-zlib-LICENSE.txt",
+      "sha256": "170d7d544d380b38d5f76ab5eda29475b44ef537f4564163d6d9bece85c51c13",
+      "project": "pako zlib port",
+      "source": "https://github.com/nodeca/pako/blob/2.1.0/lib/zlib/deflate.js"
+    }
+  ]
+}

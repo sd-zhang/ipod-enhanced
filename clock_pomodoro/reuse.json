@@ -1,0 +1,88 @@
+{
+  "status": "host_only_prototype_not_flashable",
+  "baseline": {
+    "firmware": "build/navigation-qol-complete/iPod_4.3.1.1-gapless-navigation-complete-r19.ipsw",
+    "ipsw_sha256": "cdf51e193fd93b29d8cd7e5eb46938abcdc53b637a56d6979a28176eb9b18422",
+    "osos_sha256": "1dd7b429d41335c7f7ecf9ba9928e3cfe11552f2180dd7b8b17b7e1998b6d15b",
+    "modified_on_disk": false
+  },
+  "native_services_exercised": [
+    {"address": "0xb7e10", "purpose": "Read RTC time through the native software calendar"},
+    {"address": "0x3034c", "purpose": "Add duration and normalize calendar rollover"},
+    {"address": "0xcd21c", "purpose": "Set an alarm record"},
+    {"address": "0x3caa4", "purpose": "Cancel an alarm record"},
+    {"address": "0x2e83c", "purpose": "Select and program the earliest enabled alarm"},
+    {"address": "0x1599ac", "purpose": "Retire due alarms and request wake/event delivery"},
+    {"address": "0xa6e6c", "purpose": "Submit a beep request to the native kernel service"}
+  ],
+  "native_ui_available_but_not_integrated": {
+    "clock_menu_resource": "0x4581",
+    "clock_view_resources": ["0x4582", "0x4583"],
+    "alarm_view_resources": ["0x458d", "0x4594"],
+    "clock_command_range": [2444, 2448],
+    "reuse": "Existing menu, navigation and Clock view machinery"
+  },
+  "rtc_table": {
+    "original_address": "0x103c98e4",
+    "original_records": 5,
+    "record_bytes": 20,
+    "existing_slots": {
+      "0": "Calendar/day rollover",
+      "1": "System callback/event 0x94; exact system role not yet established",
+      "2": "Native alarm kind 0, event 0x89",
+      "3": "Native alarm kind 1, event 0x8a",
+      "4": "Native alarm kind 2, event 0x8b"
+    },
+    "experiment": "Relocate to fixture-owned RAM and extend scheduler/reset loops to six records",
+    "additional_record_bytes": 20,
+    "relocated_table_bytes": 120,
+    "device_ram_allocation_implemented": false,
+    "observation": "Stock setter/canceller accept slot 5 but stock scheduler/reset loops only cover slots 0 through 4"
+  },
+  "sleep_timer": {
+    "setter": "0xca38c",
+    "application_timer_setup": "0xe0c78",
+    "uses_rtc_alarm_table": false,
+    "verified": "Native setter paths for Off, 15, 30, 60, 90 and 120 minutes preserve all six RTC records and Pomodoro state",
+    "not_verified": "Actual timer expiry, poweroff and physical wake coexistence"
+  },
+  "interval_helper": {
+    "compiled_arm_bytes": 1080,
+    "caller_owned_state_bytes": 32,
+    "focus_seconds": 1500,
+    "short_break_seconds": 300,
+    "long_break_seconds": 900,
+    "focus_rounds_per_cycle": 4,
+    "operations": ["start", "pause", "reset", "remaining", "expire"],
+    "expiry_routing": "Supplied by host; alarm event ID remains zero",
+    "late_delivery": "Preserve cadence, skip full cycles arithmetically, at most eight phase-loop iterations",
+    "size_excludes": "Menu resources, event integration, boot-time allocation and other production integration"
+  },
+  "verification": {
+    "date": "2026-11-24",
+    "native_rtc_checks": 10,
+    "compiled_interval_checks": 8,
+    "result": "passed",
+    "logs": [
+      "build/research/otg-clock/rtc-sixth-green.log",
+      "build/research/pomodoro-spike/interval-verification.log"
+    ],
+    "execution": "Original ARM routines and compiled ARM helper in Unicorn; repository .venv outside the macOS sandbox",
+    "supplied_boundaries": [
+      "Clock/MMIO values and IRQ generation",
+      "Kernel locking, signals, timer services and physical wake",
+      "RTC-to-Pomodoro expiry handoff",
+      "Beep kernel service completion and audible output",
+      "UI property-change delivery"
+    ],
+    "hardware_tested": false
+  },
+  "production_work_remaining": [
+    "Clock menu and countdown/control view integration",
+    "Boot-time state and alarm-table allocation with verified memory ownership",
+    "Background expiry delivery, synchronization and alert dispatch outside the UI thread",
+    "Manual clock-change handling and reboot/persistence policy",
+    "Resource-space strategy: r19 has 50336 bytes of image headroom; duplicating its 47970-byte TCmd block again would consume almost all of it",
+    "On-device playback, sleep/wake and alert coexistence verification"
+  ]
+}

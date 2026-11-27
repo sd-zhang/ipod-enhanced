@@ -1,0 +1,50 @@
+minimum_pre_commit_version: '4.5.1'
+default_install_hook_types: [pre-commit]
+
+# All hooks use this repository's pinned requirements-dev.txt environment.
+# These are checks only: hooks never rewrite source, vendor files or artifacts.
+# Install the direct pre-push guard with release_tools/install_hooks.py.
+repos:
+  - repo: local
+    hooks:
+      - id: repository-hygiene
+        name: public inventory, credentials, hygiene and branch protection
+        entry: .venv/bin/python release_tools/check_repository.py --protect-branch
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [pre-commit]
+      - id: markdown-links
+        name: exact publication Markdown links and anchors
+        entry: .venv/bin/python release_tools/check_doc_links.py
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [pre-commit]
+      - id: python-correctness
+        name: Python critical correctness (all public source)
+        entry: .venv/bin/python -m ruff check --select E9,F63,F7,F82
+        language: system
+        types: [python]
+        stages: [pre-commit]
+      - id: release-tools-lint
+        name: public release tools lint and imports
+        entry: .venv/bin/python -m ruff check
+        language: system
+        types: [python]
+        files: ^release_tools/
+        stages: [pre-commit]
+      - id: release-tools-format
+        name: public release tools format check
+        entry: .venv/bin/python -m ruff format --check
+        language: system
+        types: [python]
+        files: ^release_tools/
+        stages: [pre-commit]
+      - id: repository-pre-push
+        name: full public-source verification (tests, types and security)
+        entry: .venv/bin/python release_tools/verify_repository.py --require-clean
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [pre-push]

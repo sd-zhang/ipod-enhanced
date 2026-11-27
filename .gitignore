@@ -1,0 +1,40 @@
+# Local firmware and generated evidence
+/build/
+/dist/
+*.ipsw
+*.bin
+Firmware-*
+*.elf
+*.o
+*.bsdiff
+*.ipepatch
+*-patch.zip
+
+# Local Python environment and disposable caches
+/.venv
+/.uv-cache/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Local credentials and task records
+.env
+.env.*
+!.env.example
+/docs/superpowers/
+/docs/HANDOFF.md
+/inputs/local-manifest.json
+
+# Editor and OS state
+.idea/
+.vscode/
+.DS_Store
+*.tmp
+*.log
+
+# Private installation tools (not distributed)
+/gapless/flash_firmware.py
+/gapless/test_flash_firmware.py
+/targets/ipod55g/private/
