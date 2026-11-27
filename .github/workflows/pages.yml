@@ -1,5 +1,6 @@
 name: Publish browser patcher
 
+# Deploy explicitly from the default branch; patch releases remain separate assets.
 on:
   workflow_dispatch:
 
