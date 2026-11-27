@@ -24,6 +24,9 @@ Session plans and handoffs belong under ignored `build/`, not public documentati
 
 ## Before committing or pushing
 
+Use the authenticated `gh` CLI for GitHub operations. Do not use the GitHub
+connector; this is the user's standing preference.
+
 Follow [the local pre-push rules](docs/BUILDING.md#pre-push-checks). Their source
 is this repository's `.pre-commit-config.yaml`, `requirements-dev.txt` and
 `release_tools/verify_repository.py`; no TREX checkout is needed.
