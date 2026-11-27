@@ -1,9 +1,10 @@
 # Firmware release status
 
-These are local developer-preview candidates. Use the [user guide](USER_GUIDE.md)
+These are developer-preview releases. Use the [user guide](USER_GUIDE.md)
 for controls and [build guide](BUILDING.md) for reproduction and installation.
 Native ARM tests supply OS and hardware boundaries; they do not establish
-full-device reliability, rendering or timing. Nothing has been published.
+full-device reliability, rendering or timing. The user reports both current
+builds work after flashing; this is not an exhaustive hardware checklist.
 
 | Target | Current candidate | About → Version | Local validation |
 | --- | --- | --- | --- |
@@ -13,7 +14,7 @@ full-device reliability, rendering or timing. Nothing has been published.
 Both candidates retain the existing feature set and add the Enhanced revision
 inside the native About Version row. Apple's firmware compatibility identifiers
 are unchanged. Hardware acceptance and outstanding observations are maintained
-in [Known issues](KNOWN_ISSUES.md); neither new About display has device acceptance.
+in [Known issues](KNOWN_ISSUES.md).
 
 **4G r44 and r45 remain withdrawn.** The r45 boot loop came from a boot-time
 Thumb call whose Apple ARM return could not switch back on ARMv4T. r44 shared
@@ -82,6 +83,8 @@ in the candidate's adjacent `.artifacts` directory; earlier attempts stay immuta
 
 ## Offline patch previews
 
+[Download 4G r50 and 5.5G r19 patches and checksums](https://github.com/sd-zhang/ipod-enhanced/releases/tag/r50-r19).
+
 These data-only `.ipepatch` files reconstruct the candidates above from the
 matching stock IPSWs. Each ZIP contains exactly `manifest.json` and
 `firmware.bsdiff`, using `ipod-enhanced-bsdiff-v1`. Complete firmware, private
@@ -108,6 +111,8 @@ No public installation method has been validated. These checks do not establish
 Finder/iTunes, iPodWizard, iPodFirm or other third-party installer compatibility.
 
 ## Browser patcher preview
+
+[Open the browser patcher](https://sd-zhang.github.io/ipod-enhanced/).
 
 Choose an original Apple IPSW and a downloaded `.ipepatch`, then save the verified
 result. Files are processed locally in browser memory. The app contains no
@@ -141,7 +146,7 @@ The original hardening evidence under `build/patcher-hardening-01/` includes
 regressions for malformed Huffman tables and signed BSDIFF movement, and exact
 source rebuilds. The current source-only Pages build also reproduces the page
 without Apple files or patches. [Publishing instructions](BUILDING.md#publishing-patches-and-the-web-app)
-cover the manual workflow and separate patch assets; neither has been published.
+cover the manual workflow and separate patch assets.
 
 Earlier firmware releases, `.ipepatch` bundles, helper ZIPs, embedded-patch pages
 and their receipts remain immutable in local `build/` evidence. Reproduce them

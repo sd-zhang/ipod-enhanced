@@ -7,6 +7,12 @@ using the 4G's own firmware. Pomodoro was just for fun.
 The project now also has a separate **5.5G** target, built on Apple's 1.3
 firmware. Both keep the native Apple interface and controls.
 
+[Open the browser patcher](https://sd-zhang.github.io/ipod-enhanced/) ·
+[Download patches](https://github.com/sd-zhang/ipod-enhanced/releases/tag/r50-r19)
+
+Download the patch for your model, then supply it and your own matching stock
+Apple IPSW to the patcher. Processing happens locally in your browser.
+
 ## What's new compared with stock
 
 ### Monochrome 4G
