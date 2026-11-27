@@ -112,7 +112,7 @@ Finder/iTunes, iPodWizard, iPodFirm or other third-party installer compatibility
 
 ## Browser patcher preview
 
-[Open the browser patcher](https://sd-zhang.github.io/ipod-enhanced/).
+[Open the browser patcher](https://stevenz.me/ipod-enhanced/).
 
 Choose an original Apple IPSW and a downloaded `.ipepatch`, then save the verified
 result. Files are processed locally in browser memory. The app contains no
