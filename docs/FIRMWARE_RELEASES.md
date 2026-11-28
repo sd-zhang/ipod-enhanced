@@ -91,10 +91,14 @@ matching stock IPSWs. Each ZIP contains exactly `manifest.json` and
 installers and device data are excluded. See
 [patch instructions](BUILDING.md#apply-a-release-patch).
 
-| Target | Bundle size | Delta size |
-| --- | ---: | ---: |
-| 4G r50 | 36,270 bytes | 35,754 bytes |
-| 5.5G r19 | 16,499 bytes | 15,990 bytes |
+| Target | Download filename | Bundle size | Delta size |
+| --- | --- | ---: | ---: |
+| 4G r50 | `iPod_4.3.1.1-r50.ipepatch` | 36,270 bytes | 35,754 bytes |
+| 5.5G r19 | `iPod_25.1.3-r19.ipepatch` | 16,499 bytes | 15,990 bytes |
+
+The filename identifies the required stock IPSW and Enhanced revision. The
+original local fixtures below retain their immutable paths; published files
+have identical bytes and SHA-256 hashes.
 
 ```text
 build/release-prep-01/patches-01/ipod4g-r50.ipepatch
