@@ -112,7 +112,7 @@ Finder/iTunes, iPodWizard, iPodFirm or other third-party installer compatibility
 
 ## Browser patcher preview
 
-[Open the browser patcher](https://sd-zhang.github.io/ipod-enhanced/).
+[Open iPod Firmware Patcher](https://sd-zhang.github.io/ipod-enhanced/).
 
 Choose an original Apple IPSW and a downloaded `.ipepatch`, then save the verified
 result. Files are processed locally in browser memory. The app contains no
@@ -120,9 +120,9 @@ firmware payloads or release catalog; future compatible patches do not require
 a site rebuild. It runs as local HTML or on static HTTPS hosting.
 
 ```text
-build/patcher-minimal-01/site-02/index.html
-Size: 110,616 bytes
-SHA-256: ff2e82465cd2852c15b401d35a9540f83a5e89a70a58edb9f59cd3fd41f6b488
+build/patcher-title-01/site-02/index.html
+Size: 110,555 bytes
+SHA-256: 0ba5a35015390f5762cd319bdf5c53bd3080b2dc1f54e9349d47f0dfef5edaa9
 ```
 
 The page has two file inputs, an Apply button and a footer with download,
@@ -135,14 +135,17 @@ and work; the page policy blocks injected scripts, frames and runtime network
 requests. Vendor provenance and corrections are in
 [sources.json](../release_tools/web/vendor/sources.json), with licenses retained.
 
-Fresh release validation passed 29 JavaScript core checks and 17 checks each in
-Brave and Playwright WebKit on macOS. Both downloaded the exact r50/r19 archives
+Validation covers 29 JavaScript core checks and 17 browser checks. The current
+page passed Brave; the unchanged runtime also passed Playwright WebKit on macOS.
+Both downloaded the exact r50/r19 archives
 and covered wrong inputs, corruption, cancellation, stale downloads, mobile-width
 layout and enforced browser security policy. No HTTP requests or application
 errors occurred; deliberate policy violations have separate expected diagnostics.
 This is browser-engine coverage on macOS, not Windows/Linux/mobile device testing.
-Receipts for the updated page are under `build/patcher-minimal-01/browser-brave-02/`
-and `build/patcher-minimal-01/browser-webkit-02/`.
+Receipts are under `build/patcher-title-01/browser-brave-01/` and
+`build/patcher-minimal-01/browser-webkit-02/`. A byte comparison confirms that only
+the heading, tab title, description and IPSW link differ from the WebKit-tested
+page; runtime code, CSS, security policy and licenses are identical.
 
 The original hardening evidence under `build/patcher-hardening-01/` includes
 51 independently generated bzip cases, 1,500 bounded deterministic mutations,
