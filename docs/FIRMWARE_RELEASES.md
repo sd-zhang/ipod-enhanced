@@ -114,6 +114,13 @@ Checksums verify consistency; an unsigned patch does not authenticate its author
 No public installation method has been validated. These checks do not establish
 Finder/iTunes, iPodWizard, iPodFirm or other third-party installer compatibility.
 
+The final patcher review added bounded decompression and control-count checks
+to the optional Python helper. Fresh GitHub downloads of both patches reconstruct
+the exact archives above with that helper. Regression coverage checks bounded
+ZIP reads, unsupported compression, control limits and trailing bzip data;
+evidence is under `build/patcher-final-review-01/`. Published patch bytes and the
+browser app are unchanged.
+
 ## Browser patcher preview
 
 [Open iPod Firmware Patcher](https://sd-zhang.github.io/ipod-enhanced/).
@@ -146,8 +153,8 @@ and covered wrong inputs, corruption, cancellation, stale downloads, mobile-widt
 layout and enforced browser security policy. No HTTP requests or application
 errors occurred; deliberate policy violations have separate expected diagnostics.
 This is browser-engine coverage on macOS, not Windows/Linux/mobile device testing.
-Receipts are under `build/license-cleanup-01/browser-brave-01/` and
-`build/license-cleanup-01/browser-webkit-01/`. The consolidated MIT and zlib panel
+Latest receipts are under `build/patcher-final-review-01/browser-brave-01/` and
+`build/patcher-final-review-01/browser-webkit-01/`. The consolidated MIT and zlib panel
 fits at 320, 375 and 1000 pixels. A frozen-source rebuild is byte-identical;
 comparison with the previous page confirms only the license panel changed.
 Runtime code, CSS, security policy and vendored source bytes are unchanged.
