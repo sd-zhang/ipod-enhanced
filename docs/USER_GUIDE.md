@@ -2,6 +2,8 @@
 
 For the monochrome click-wheel **4G** and the late-2006 **5.5G**. These are
 separate firmware targets; the differences below matter when following menus.
+Use the [tested compatibility chart](../README.md#tested-compatibility) to match
+your model and original Apple IPSW to the appropriate patch.
 
 ## Identifying the installed revision
 

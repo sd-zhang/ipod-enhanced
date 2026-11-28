@@ -13,6 +13,27 @@ firmware. Both keep the native Apple interface and controls.
 Download the patch for your model, then supply it and your own matching stock
 Apple IPSW to the patcher. Processing happens locally in your browser.
 
+## Tested compatibility
+
+| iPod model | Original Apple IPSW (Apple download) | Stock version in About | Enhanced release | Hardware report |
+| --- | --- | --- | --- | --- |
+| Monochrome click-wheel 4G | [iPod_4.3.1.1.ipsw](https://secure-appldnld.apple.com/iPod/SBML/osx/bundles/061-2691.20060912.ipDcw/iPod_4.3.1.1.ipsw) | `3.1.1` | r50 | Reported working after flashing |
+| 5.5G (Late 2006) | [iPod_25.1.3.ipsw](https://secure-appldnld.apple.com/iPod/SBML/osx/bundles/061-2967.20080313.Cnvkg/iPod_25.1.3.ipsw) | `1.3` | r19 | Reported working after flashing |
+
+The filename links download the original IPSWs directly from Apple. Both
+downloads have been verified against the SHA-256 values required by our patches.
+
+`4.3.1.1` and `25.1.3` are the full Apple firmware package identifiers used
+here. The stock About screen shows `3.1.1` and `1.3`; the enhanced builds add
+`/ r50` and `/ r19` respectively.
+
+These are the model/package combinations tested on our devices, not a claim
+that every capacity or hardware revision has been tested. Other models
+(including the original 5G and 4G photo/color) and other firmware packages are
+unverified. Each patch requires the exact stock IPSW content: the patcher checks
+its SHA-256, not just its filename. [Stock checksums](docs/BUILDING.md#stock-inputs-and-manifest-scope)
+and [test coverage](docs/KNOWN_ISSUES.md) are documented separately.
+
 ## What's new compared with stock
 
 ### Monochrome 4G
