@@ -32,7 +32,7 @@ let browser;
   page.on('console', message => { if (message.type() === 'error') errors.push(message.text()); });
   await context.route(/^https?:/, async route => { requests.push(route.request().url()); await route.abort(); });
   await page.goto(pathToFileURL(site).href);
-  assert.match(await page.title(), /iPod Enhanced/);
+  assert.equal(await page.title(), 'iPod Firmware Patcher');
   assert.equal(await page.locator('#patch').isDisabled(), true);
   assert.equal(await page.locator('#status').textContent(), '');
   await screenshot('desktop.png');
