@@ -72,6 +72,10 @@ current `.ipepatch` downloads. Each is a small ZIP with exactly two files:
 keep both files intact. The patch contains a BSDIFF40 delta, not a complete
 firmware image, private installer, device backup or captured library.
 
+Use `<stock IPSW stem>-<revision>.ipepatch` for release filenames:
+`iPod_4.3.1.1-r50.ipepatch` requires `iPod_4.3.1.1.ipsw`, and
+`iPod_25.1.3-r19.ipepatch` requires `iPod_25.1.3.ipsw`.
+
 The versioned manifest remains `ipod-enhanced-bsdiff-v1`. It records `format`,
 `model`, `revision` and the `Firmware-*` member name in `member`. Its
 `source_archive`, `source_firmware`, `target_archive`, `target_firmware` and
@@ -145,9 +149,9 @@ node --test release_tools/web/test_core.cjs
 IPOD_WEB_REAL=1 node --test release_tools/web/test_core.cjs
 ```
 
-The last command uses local stock IPSWs and the immutable `.ipepatch` files
-listed in the release record. `release_tools/web/test_browser.cjs` tests the
-actual page, both file inputs, rejection/cancellation, downloads and mobile
+The last command uses local stock IPSWs and the original immutable `.ipepatch`
+fixtures listed in the release record. `release_tools/web/test_browser.cjs` tests
+the actual page, both file inputs, rejection/cancellation, downloads and mobile
 layout using Playwright. Its security probes also submit hostile patch metadata
 and attempt script injection, worker evaluation/imports, frame embedding and
 network access with the real page policy enforced. Expected CSP diagnostics from
@@ -165,7 +169,7 @@ repository's public helper with its optional dependency in the existing venv:
 
 ```sh
 uv pip install --python .venv/bin/python -r release_tools/requirements.txt
-unzip path/to/ipod4g-r50.ipepatch -d build/local-patch
+unzip path/to/iPod_4.3.1.1-r50.ipepatch -d build/local-patch
 .venv/bin/python release_tools/apply_patch.py iPod_4.3.1.1.ipsw --bundle build/local-patch --output build/local/ipod4g-r50.ipsw
 ```
 
@@ -196,8 +200,8 @@ reconstruction before publishing a `.ipepatch`. It does not rebuild firmware.
 Choose fresh files in an existing directory:
 
 ```sh
-.venv/bin/python -B release_tools/build_patch.py --target ipod4g --stock iPod_4.3.1.1.ipsw --firmware build/ipod4g-r50-attempt-01/iPod_4.3.1.1-gapless-navigation-complete-r50.ipsw --output build/local/ipod4g-r50.ipepatch
-.venv/bin/python -B release_tools/build_patch.py --target ipod55g --stock iPod_25.1.3.ipsw --firmware build/ipod55g-oemplus-r19-attempt-03/iPod_25.1.3-oemplus-r19.ipsw --output build/local/ipod55g-r19.ipepatch
+.venv/bin/python -B release_tools/build_patch.py --target ipod4g --stock iPod_4.3.1.1.ipsw --firmware build/ipod4g-r50-attempt-01/iPod_4.3.1.1-gapless-navigation-complete-r50.ipsw --output build/local/iPod_4.3.1.1-r50.ipepatch
+.venv/bin/python -B release_tools/build_patch.py --target ipod55g --stock iPod_25.1.3.ipsw --firmware build/ipod55g-oemplus-r19-attempt-03/iPod_25.1.3-oemplus-r19.ipsw --output build/local/iPod_25.1.3-r19.ipepatch
 ```
 
 Use `--with-tools` and a `.zip` output name for the legacy seven-file helper
@@ -359,9 +363,10 @@ the push command to the contributor; agents do not push.
 
 ## Publishing patches and the web app
 
-Publish the two reviewed `.ipepatch` files as GitHub Release assets, with their
-SHA-256 hashes from the release record. Do not upload IPSWs, device snapshots,
-private installers or the development `build/` tree. Users supply their own
+Publish the two reviewed `.ipepatch` files as GitHub Release assets using
+`<stock IPSW stem>-<revision>.ipepatch`, with their SHA-256 hashes from the release
+record. `SHA256SUMS` must use the published filenames. Do not upload IPSWs,
+device snapshots, private installers or the development `build/` tree. Users supply their own
 matching stock IPSW to the browser patcher. These remain developer previews
 until a public device-installation path has been validated.
 

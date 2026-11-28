@@ -15,10 +15,10 @@ Apple IPSW to the patcher. Processing happens locally in your browser.
 
 ## Tested compatibility
 
-| iPod model | Original Apple IPSW (Apple download) | Stock version in About | Enhanced release | Hardware report |
+| iPod model | Original Apple IPSW (Apple download) | Stock version in About | Patch | Hardware report |
 | --- | --- | --- | --- | --- |
-| Monochrome click-wheel 4G | [iPod_4.3.1.1.ipsw](https://secure-appldnld.apple.com/iPod/SBML/osx/bundles/061-2691.20060912.ipDcw/iPod_4.3.1.1.ipsw) | `3.1.1` | r50 | Reported working after flashing |
-| 5.5G (Late 2006) | [iPod_25.1.3.ipsw](https://secure-appldnld.apple.com/iPod/SBML/osx/bundles/061-2967.20080313.Cnvkg/iPod_25.1.3.ipsw) | `1.3` | r19 | Reported working after flashing |
+| Monochrome click-wheel 4G | [iPod_4.3.1.1.ipsw](https://secure-appldnld.apple.com/iPod/SBML/osx/bundles/061-2691.20060912.ipDcw/iPod_4.3.1.1.ipsw) | `3.1.1` | [iPod_4.3.1.1-r50.ipepatch](https://github.com/sd-zhang/ipod-enhanced/releases/download/r50-r19/iPod_4.3.1.1-r50.ipepatch) | Reported working after flashing |
+| 5.5G (Late 2006) | [iPod_25.1.3.ipsw](https://secure-appldnld.apple.com/iPod/SBML/osx/bundles/061-2967.20080313.Cnvkg/iPod_25.1.3.ipsw) | `1.3` | [iPod_25.1.3-r19.ipepatch](https://github.com/sd-zhang/ipod-enhanced/releases/download/r50-r19/iPod_25.1.3-r19.ipepatch) | Reported working after flashing |
 
 The filename links download the original IPSWs directly from Apple. Both
 downloads have been verified against the SHA-256 values required by our patches.
