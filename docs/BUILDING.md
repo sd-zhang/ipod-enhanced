@@ -46,11 +46,14 @@ commands target the monochrome click-wheel 4G.
 
 The stock IPSWs remain at the repository root because the builders and native
 test fixtures use those paths. They are local files, not tracked source.
+The download links below point directly to Apple; both files match these pinned
+SHA-256 values. The [tested compatibility chart](../README.md#tested-compatibility) distinguishes
+Apple's full package identifiers from the versions displayed in About.
 
 | File | Target | SHA-256 |
 | --- | --- | --- |
-| `iPod_4.3.1.1.ipsw` | Monochrome click-wheel 4G, software 3.1.1 | `576e05def7800e28cfd9a28ec36518964ab7a356f3b035e3fc223b0816be9ed9` |
-| `iPod_25.1.3.ipsw` | Enhanced Video 5.5G, software 1.3 | `840b2480ad5b692c098cb772c3d2bf8f58bf37557788782b596ac01c27ecdc32` |
+| [iPod_4.3.1.1.ipsw](https://secure-appldnld.apple.com/iPod/SBML/osx/bundles/061-2691.20060912.ipDcw/iPod_4.3.1.1.ipsw) | Monochrome click-wheel 4G, software 3.1.1 | `576e05def7800e28cfd9a28ec36518964ab7a356f3b035e3fc223b0816be9ed9` |
+| [iPod_25.1.3.ipsw](https://secure-appldnld.apple.com/iPod/SBML/osx/bundles/061-2967.20080313.Cnvkg/iPod_25.1.3.ipsw) | Enhanced Video 5.5G, software 1.3 | `840b2480ad5b692c098cb772c3d2bf8f58bf37557788782b596ac01c27ecdc32` |
 
 The ignored `inputs/local-manifest.json` records files copied during the original
 repository split. It is a historical migration manifest, **not** a continually updated
