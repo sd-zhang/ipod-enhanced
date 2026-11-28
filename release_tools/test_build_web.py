@@ -1,6 +1,7 @@
 """The static app builds without firmware or release patch inputs."""
 
 import hashlib
+import html
 import json
 import shutil
 import tempfile
@@ -54,6 +55,49 @@ class WebBuildTests(unittest.TestCase):
         encoded = build_web.json_for_html({"text": "</script><script>alert(1)</script>"})
         self.assertNotIn("<", encoded)
         self.assertEqual(json.loads(encoded)["text"], "</script><script>alert(1)</script>")
+
+    def test_consolidated_licenses_preserve_bundled_attribution_and_terms(self):
+        page = build_web.render_page().decode()
+        panel = html.unescape(
+            page.split("<details><summary>Licenses</summary>", 1)[1].split("</details>", 1)[0]
+        )
+        for notice in [
+            "Copyright (c) 2026 sd-zhang",
+            "Copyright (c) 2017-2024 Marc Robledo",
+            "Copyright (c) 2014-2024 Marc Robledo",
+            "Copyright (C) 2014-2017 by Vitaly Puzrin and Andrei Tuputcyn",
+            "bz2 (C) 2019-present SheetJS LLC",
+            "Copyright 2019 SheetJS LLC",
+            "(C) 1995-2013 Jean-loup Gailly and Mark Adler",
+            "(C) 2014-2017 Vitaly Puzrin and Andrey Tupitsin",
+        ]:
+            with self.subTest(notice=notice):
+                self.assertIn(notice, panel)
+        terms = (build_web.HERE.parent / "LICENSE").read_text().split("Permission is hereby", 1)[1]
+        self.assertEqual(panel.count("Permission is hereby"), 1)
+        self.assertIn(" ".join(terms.split()), " ".join(panel.split()))
+        zlib = (build_web.WEB / "vendor/pako-zlib-LICENSE.txt").read_text()
+        zlib = "\n".join(line.removeprefix("//").removeprefix(" ") for line in zlib.splitlines())
+        self.assertIn(zlib.strip(), panel)
+        self.assertNotIn("Octicons", panel)
+        self.assertNotIn("Huffman", panel)
+        self.assertIn("modified", panel)
+
+    def test_different_mit_terms_are_not_silently_merged(self):
+        source = self.root / "web"
+        shutil.copytree(build_web.WEB, source)
+        license_path = source / "vendor/pako-LICENSE.txt"
+        license_path.write_text(license_path.read_text() + "An additional license condition.\n")
+        manifest_path = source / "vendor/sources.json"
+        manifest = json.loads(manifest_path.read_text())
+        for entry in manifest["files"]:
+            if entry["file"] == "pako-LICENSE.txt":
+                entry["sha256"] = hashlib.sha256(license_path.read_bytes()).hexdigest()
+        manifest_path.write_text(json.dumps(manifest))
+        with patch.object(build_web, "WEB", source):
+            with self.assertRaisesRegex(ValueError, "MIT terms differ"):
+                build_web.build_site(self.root / "site")
+        self.assertFalse((self.root / "site").exists())
 
 
 if __name__ == "__main__":

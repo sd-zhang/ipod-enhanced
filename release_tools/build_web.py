@@ -35,6 +35,44 @@ def csp_hash(text):
     return "'sha256-" + base64.b64encode(hashlib.sha256(text.encode()).digest()).decode() + "'"
 
 
+def render_licenses():
+    binfile = (WEB / "vendor/BinFile.js").read_text().split("*/", 1)[0]
+    binfile = re.sub(r"^\s*\* ?", "", binfile, flags=re.MULTILINE)
+    bdf = (WEB / "vendor/RomPatcher.format.bdf.js").read_text()
+    sheetjs = bdf[bdf.index("bz2 (C)") : bdf.index("*/", bdf.index("bz2 (C)"))].strip()
+    licenses = [
+        ("iPod Firmware Patcher", (HERE.parent / "LICENSE").read_text()),
+        ("Rom Patcher JS (modified)", (WEB / "vendor/rom-patcher-LICENSE.txt").read_text()),
+        ("BinFile.js (modified)", binfile),
+        ("pako", (WEB / "vendor/pako-LICENSE.txt").read_text()),
+        ("SheetJS bz2 (modified)", sheetjs),
+    ]
+    credits = []
+    mit_terms = ""
+    for name, text in licenses:
+        header, marker, terms = text.partition("Permission is hereby granted,")
+        # Retain the code's copyright notices. Octicons is named in the upstream
+        # repository license, but no Octicons files are bundled in this page.
+        copyrights = re.findall(r"^(?:Copyright[^\n]+|bz2 \(C\)[^\n]+)$", header, re.MULTILINE)
+        if not marker or not copyrights:
+            raise ValueError(f"Missing MIT notice: {name}")
+        terms = (marker + terms).strip()
+        if mit_terms and terms.split() != mit_terms.split():
+            raise ValueError(f"MIT terms differ: {name}; review before consolidating")
+        mit_terms = mit_terms or terms
+        credits.append(name + "\n" + "\n".join(copyrights))
+    mit = "\n\n".join([*credits, mit_terms])
+    zlib = (WEB / "vendor/pako-zlib-LICENSE.txt").read_text()
+    zlib = re.sub(r"^// ?", "", zlib, flags=re.MULTILINE).strip()
+    return (
+        "<h3>MIT</h3><pre>"
+        + html.escape(mit)
+        + "</pre><h3>zlib — pako's zlib port</h3><pre>"
+        + html.escape(zlib)
+        + "</pre>"
+    )
+
+
 def render_page():
     sources = json.loads((WEB / "vendor/sources.json").read_text())
     for entry in sources["files"]:
@@ -43,29 +81,6 @@ def render_page():
     worker = "\n;\n".join((WEB / name).read_text() for name in WORKER_FILES)
     app = (WEB / "app.js").read_text()
     style = (WEB / "style.css").read_text()
-    licenses = [
-        ("iPod Enhanced", HERE.parent / "LICENSE"),
-        ("Rom Patcher JS", WEB / "vendor/rom-patcher-LICENSE.txt"),
-        ("pako", WEB / "vendor/pako-LICENSE.txt"),
-        ("pako · zlib", WEB / "vendor/pako-zlib-LICENSE.txt"),
-    ]
-    # SheetJS's full license is retained in the BDF module; expose it in the UI too.
-    bdf = (WEB / "vendor/RomPatcher.format.bdf.js").read_text()
-    sheetjs = bdf[bdf.index("bz2 (C)") : bdf.index("*/", bdf.index("bz2 (C)"))].strip()
-    notices = [(name, path.read_text()) for name, path in licenses] + [("SheetJS bz2", sheetjs)]
-    modifications = (
-        "Rom Patcher JS commit "
-        + sources["rom_patcher"]["commit"]
-        + "; pako "
-        + sources["pako"]["version"]
-        + ". Local fixes: "
-        + " ".join(item["change"] for item in sources["local_modifications"])
-    )
-    license_html = "<p>" + html.escape(modifications) + "</p>"
-    license_html += "".join(
-        "<h3>" + html.escape(name) + "</h3><pre>" + html.escape(text) + "</pre>"
-        for name, text in notices
-    )
     csp = (
         "default-src 'none'; script-src "
         + csp_hash(app)
@@ -78,7 +93,7 @@ def render_page():
         "STYLE": style,
         "APP": app,
         "WORKER": json_for_html(worker),
-        "LICENSES": license_html,
+        "LICENSES": render_licenses(),
     }
     template = (WEB / "template.html").read_text()
     placeholders = re.findall(r"\{\{([A-Z]+)\}\}", template)

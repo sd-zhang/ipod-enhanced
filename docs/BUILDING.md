@@ -139,9 +139,12 @@ do not authenticate its author or establish that its firmware is safe to install
 The browser reuses pinned Rom Patcher JS BSDIFF40/BinFile code and pako 2.1.0.
 Vendor provenance and local corrections, including bounded bzip decoding and
 signed control handling for uploaded patches, are recorded in
-[`sources.json`](../release_tools/web/vendor/sources.json). MIT and zlib notices
-remain in the page. Both firmware and final archive hashes must match, so a
-compression mismatch cannot produce a downloadable file.
+[`sources.json`](../release_tools/web/vendor/sources.json). The page groups MIT
+components under one copy of the terms, retaining each copyright notice and
+marking modified components. Pako's zlib terms remain separate. Original vendor
+notices stay intact; the builder refuses to consolidate differing MIT terms.
+Both firmware and final archive hashes must match, so a compression mismatch
+cannot produce a downloadable file.
 
 ```sh
 .venv/bin/python -B -m unittest discover -s release_tools
