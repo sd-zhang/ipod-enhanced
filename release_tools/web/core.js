@@ -147,12 +147,12 @@
   async function apply(stock, patchFile, progress = () => {}) {
     if (!(stock instanceof Uint8Array) || stock.length < 22 || stock.length > MAX_IMAGE) fail('Unsupported IPSW file size.');
     if (!(patchFile instanceof Uint8Array) || patchFile.length < 22 || patchFile.length > MAX_PATCH_FILE) fail('Unsupported .ipepatch file size.');
-    progress({ phase: 'check', message: 'Checking your patch file…' });
+    progress({ phase: 'check', message: 'Checking patch…' });
     const bundle = readZip(patchFile, { 'manifest.json': 16384, 'firmware.bsdiff': MAX_PATCH });
     const m = validateManifest(JSON.parse(decoder.decode(bundle.entries.find(item => item.name === 'manifest.json').data)));
     const delta = bundle.entries.find(item => item.name === 'firmware.bsdiff').data;
     await check(delta, m.patch, 'Patch');
-    progress({ phase: 'check', message: 'Checking original Apple firmware…' });
+    progress({ phase: 'check', message: 'Checking stock IPSW…' });
     await check(stock, m.source_archive, 'Original Apple IPSW (model/version must match)');
     const archive = readZip(stock, { [m.member]: MAX_IMAGE, 'manifest.plist': 16384 });
     const member = archive.entries.find(item => item.name === m.member);
@@ -162,10 +162,10 @@
     if (patch.patchedSize !== m.target_firmware.size) fail('Patch output size mismatch.');
     const firmware = patch.apply(new BinFile(member.data))._u8array;
     await check(firmware, m.target_firmware, 'Patched firmware');
-    progress({ phase: 'rebuild', message: 'Rebuilding the IPSW…' });
+    progress({ phase: 'rebuild', message: 'Rebuilding IPSW…' });
     member.data = firmware;
     const bytes = rebuildZip(archive);
-    progress({ phase: 'verify', message: 'Checking the finished IPSW against the patch…' });
+    progress({ phase: 'verify', message: 'Verifying output…' });
     await check(bytes, m.target_archive, 'Rebuilt output release');
     const output_name = `${m.model.replace(/ +/g, '-')}-${m.revision.replace(/ +/g, '-')}.ipsw`;
     return { bytes, release: { model: m.model, revision: m.revision, output_name,

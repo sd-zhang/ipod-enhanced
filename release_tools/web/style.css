@@ -3,7 +3,7 @@
 body { margin: 0; }
 main { width: min(100% - 40px, 560px); margin: 48px auto 32px; }
 h1 { font-size: 1.6rem; line-height: 1.25; margin: 0; font-weight: 600; }
-header p { margin: 8px 0 24px; color: #555; }
+header { margin-bottom: 24px; }
 form { padding: 20px 0; border-block: 1px solid #ddd; }
 label { display: block; font-weight: 600; margin-bottom: 8px; }
 input[type=file] { display: block; font: inherit; width: 100%; color: #444; }
@@ -11,7 +11,6 @@ input::file-selector-button { border: 1px solid #bbb; border-radius: 3px; paddin
 input::file-selector-button:hover { background: #eee; }
 input:disabled::file-selector-button { color: #666; cursor: default; }
 .hint { margin: 7px 0 22px; font-size: .875rem; color: #555; }
-code { font: .95em ui-monospace, monospace; }
 .actions { display: flex; flex-wrap: wrap; gap: 8px; }
 button, .button { display: inline-block; font: inherit; font-weight: 500; line-height: 1.4; border: 1px solid #175cad; border-radius: 3px; padding: 8px 12px; background: #175cad; color: #fff; cursor: pointer; text-decoration: none; }
 button:hover:not(:disabled), .button:hover { background: #124b8e; }
@@ -20,6 +19,7 @@ button:disabled { background: #eee; border-color: #d5d5d5; color: #666; cursor: 
 .secondary:hover:not(:disabled) { background: #eee; }
 :focus-visible { outline: 2px solid #175cad; outline-offset: 3px; }
 #status { font-size: .875rem; color: #555; margin: 12px 0 0; min-height: 1.5em; overflow-wrap: anywhere; }
+#status:empty { margin: 0; min-height: 0; }
 #status.error, .error { color: #a32525; }
 progress { display: block; width: 100%; height: 6px; margin-top: 14px; accent-color: #175cad; }
 .result { padding: 20px 0; border-bottom: 1px solid #ddd; }
@@ -38,6 +38,5 @@ footer nav { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 10px; }
 footer p { margin: 4px 0; }
 a { color: #175cad; text-underline-offset: 2px; }
 footer pre { white-space: pre-wrap; overflow-wrap: anywhere; font: .8125rem/1.5 ui-monospace, monospace; }
-.fine-print { margin-top: 10px; }
 [hidden] { display: none !important; }
 @media (max-width: 460px) { main { width: calc(100% - 32px); margin-top: 24px; } }

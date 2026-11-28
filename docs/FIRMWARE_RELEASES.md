@@ -120,14 +120,15 @@ firmware payloads or release catalog; future compatible patches do not require
 a site rebuild. It runs as local HTML or on static HTTPS hosting.
 
 ```text
-build/patcher-polish-01/site-01/index.html
-Size: 112,624 bytes
-SHA-256: ab039602f9624b0d17070c876c6c9716b4f4a35a4d98b525fdb55f96b75b003b
+build/patcher-copy-01/site-01/index.html
+Size: 111,362 bytes
+SHA-256: 4e193e9c2b21f43b39d028d3cd48675c4d3860d7cf80b7e484cc0600af2403cf
 ```
 
 The page uses a compact form with native file inputs and links to compatible
-Apple IPSWs and project patches. This presentation update leaves the patching
-code and security policy unchanged. Source, delta, firmware member and final
+Apple IPSWs and project patches. Labels and status messages are brief; the idle
+form has no instructions. Patching behavior and the security policy are unchanged.
+Source, delta, firmware member and final
 archive hashes must all match. Uploaded metadata is
 text, not executable code. Strict ZIP/BSDIFF/bzip validation bounds allocation
 and work; the page policy blocks injected scripts, frames and runtime network
@@ -140,9 +141,8 @@ and covered wrong inputs, corruption, cancellation, stale downloads, mobile-widt
 layout and enforced browser security policy. No HTTP requests or application
 errors occurred; deliberate policy violations have separate expected diagnostics.
 This is browser-engine coverage on macOS, not Windows/Linux/mobile device testing.
-Receipts for the updated page are under `build/patcher-polish-01/browser-brave-01/`
-and `build/patcher-polish-01/browser-webkit-02/`. Additional layout checks cover
-keyboard order and expanded license text at 320, 375 and 1000 pixels wide.
+Receipts for the updated page are under `build/patcher-copy-01/browser-brave-01/`
+and `build/patcher-copy-01/browser-webkit-01/`.
 
 The original hardening evidence under `build/patcher-hardening-01/` includes
 51 independently generated bzip cases, 1,500 bounded deterministic mutations,

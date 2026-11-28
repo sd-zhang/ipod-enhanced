@@ -49,12 +49,12 @@
   function changed() {
     stop();
     clearResult();
-    message(fileInput.files.length && patchInput.files.length ? 'Ready to patch.' : 'Choose an original Apple IPSW and an Enhanced patch to begin.');
+    message('');
   }
   fileInput.addEventListener('change', changed);
   patchInput.addEventListener('change', changed);
   cancel.addEventListener('click', () => {
-    stop(); clearResult(); message('Cancelled. Your original file is unchanged.');
+    stop(); clearResult(); message('Cancelled.');
   });
 
   $('form').addEventListener('submit', async event => {
@@ -64,16 +64,16 @@
     if (!file || !patchFile || !supported || active) return;
     stop(); clearResult();
     if (file.size < 22 || file.size > maxSize) {
-      message('This file is not a supported IPSW. Choose the original Apple firmware required by your patch.', true);
+      message('Invalid IPSW file size.', true);
       return;
     }
     const job = generation;
     if (patchFile.size < 22 || patchFile.size > maxPatchSize) {
-      message('This file is not a supported .ipepatch. Choose an Enhanced patch file.', true);
+      message('Invalid patch file size.', true);
       return;
     }
     busy(true);
-    message('Reading your files locally…');
+    message('Reading files…');
     try {
       const [stock, patch] = await Promise.all([file.arrayBuffer(), patchFile.arrayBuffer()]);
       if (job !== generation) return;
@@ -81,7 +81,7 @@
       let worker;
       try { worker = new Worker(url); } catch (error) { URL.revokeObjectURL(url); throw error; }
       active = { worker, url, timeout: setTimeout(() => {
-        if (job === generation) { stop(); message('Patching took too long. Try again in a current desktop browser.', true); }
+        if (job === generation) { stop(); message('Patching timed out (120s).', true); }
       }, 120000) };
       worker.onmessage = event => {
         if (job !== generation) return;
@@ -94,11 +94,11 @@
           download.href = downloadURL;
           download.download = data.release.output_name;
           $('result-title').textContent = `${data.release.model} · ${data.release.revision}`;
-          $('result-size').textContent = `${(data.bytes.byteLength / 1024 / 1024).toFixed(2)} MiB · matches patch checksums`;
+          $('result-size').textContent = `${(data.bytes.byteLength / 1024 / 1024).toFixed(2)} MiB · verified`;
           $('source-hash').textContent = data.release.source_sha256;
           $('output-hash').textContent = data.sha256;
           result.hidden = false;
-          message('Your patched firmware is ready.');
+          message('Done.');
           download.focus();
         } else if (data.type === 'error') {
           stop(); clearResult(); message(data.message, true);
@@ -107,16 +107,16 @@
       worker.onerror = event => {
         event.preventDefault();
         if (job === generation) {
-          stop(); clearResult(); message('The patcher could not finish. Try a current browser and an original Apple IPSW.', true);
+          stop(); clearResult(); message('Patch worker failed.', true);
         }
       };
       worker.postMessage({ stock, patch }, [stock, patch]);
     } catch (error) {
-      if (job === generation) { stop(); clearResult(); message(`Could not read or patch this file: ${error.message}`, true); }
+      if (job === generation) { stop(); clearResult(); message(`Patching failed: ${error.message}`, true); }
     }
   });
   window.addEventListener('pagehide', () => { stop(); clearResult(); });
   window.addEventListener('pageshow', event => { if (event.persisted) changed(); });
   busy(false);
-  if (!supported) message('This browser is missing a required feature. Open the patcher in a current browser over HTTPS or as a downloaded HTML file.', true);
+  if (!supported) message('Requires Web Crypto, Web Workers and file APIs. Use HTTPS or local HTML.', true);
 }());
