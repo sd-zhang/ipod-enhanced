@@ -37,11 +37,11 @@ let browser;
   assert.equal(await page.locator('#status').textContent(), '');
   await screenshot('desktop.png');
 
-  const file = page.getByLabel('Stock IPSW', { exact: true });
-  const patchFile = page.getByLabel('Patch (.ipepatch)', { exact: true });
+  const file = page.getByLabel('IPSW', { exact: true });
+  const patchFile = page.getByLabel('Patch', { exact: true });
   const patch4g = path.join(root, 'build/release-prep-01/patches-01/ipod4g-r50.ipepatch');
   const patch55g = path.join(root, 'build/release-prep-01/patches-01/ipod55g-r19.ipepatch');
-  const patch = page.getByRole('button', { name: 'Apply patch', exact: true });
+  const patch = page.getByRole('button', { name: 'Apply', exact: true });
   const result = page.locator('#result');
   const status = page.locator('#status');
   const waitStatus = async pattern => {
@@ -69,10 +69,10 @@ let browser;
   await patchFile.setInputFiles(patch4g);
   await patch.click();
   await page.getByRole('button', { name: 'Cancel', exact: true }).click();
-  assert.match(await status.innerText(), /Cancelled/);
+  assert.equal(await status.textContent(), '');
   await page.waitForTimeout(1200);
   assert.equal(await result.isVisible(), false);
-  assert.match(await status.innerText(), /Cancelled/);
+  assert.equal(await status.textContent(), '');
   checks.push('cancellation leaves no stale download');
 
   for (const [name, filename, patchPath, expected] of [
@@ -86,7 +86,6 @@ let browser;
     assert.equal(await result.isVisible(), false);
     assert.equal(await page.locator('#download').getAttribute('href'), null);
     await patch.click();
-    await waitStatus('^Done\\.$');
     await result.waitFor({ state: 'visible' });
     assert.equal(await page.locator('#output-hash').textContent(), expected);
     const pending = page.waitForEvent('download');

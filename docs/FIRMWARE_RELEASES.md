@@ -120,17 +120,17 @@ firmware payloads or release catalog; future compatible patches do not require
 a site rebuild. It runs as local HTML or on static HTTPS hosting.
 
 ```text
-build/patcher-copy-01/site-01/index.html
-Size: 111,362 bytes
-SHA-256: 4e193e9c2b21f43b39d028d3cd48675c4d3860d7cf80b7e484cc0600af2403cf
+build/patcher-minimal-01/site-02/index.html
+Size: 110,616 bytes
+SHA-256: ff2e82465cd2852c15b401d35a9540f83a5e89a70a58edb9f59cd3fd41f6b488
 ```
 
-The page uses a compact form with native file inputs and links to compatible
-Apple IPSWs and project patches. Labels and status messages are brief; the idle
-form has no instructions. Patching behavior and the security policy are unchanged.
-Source, delta, firmware member and final
-archive hashes must all match. Uploaded metadata is
-text, not executable code. Strict ZIP/BSDIFF/bzip validation bounds allocation
+The page has two file inputs, an Apply button and a footer with download,
+repository and license links. Progress and errors appear during use; successful
+patching reveals the download and collapsed checksums. Patching behavior and the
+security policy are unchanged. Source, delta, firmware member and final archive
+hashes must all match. Uploaded metadata is text, not executable code.
+Strict ZIP/BSDIFF/bzip validation bounds allocation
 and work; the page policy blocks injected scripts, frames and runtime network
 requests. Vendor provenance and corrections are in
 [sources.json](../release_tools/web/vendor/sources.json), with licenses retained.
@@ -141,8 +141,8 @@ and covered wrong inputs, corruption, cancellation, stale downloads, mobile-widt
 layout and enforced browser security policy. No HTTP requests or application
 errors occurred; deliberate policy violations have separate expected diagnostics.
 This is browser-engine coverage on macOS, not Windows/Linux/mobile device testing.
-Receipts for the updated page are under `build/patcher-copy-01/browser-brave-01/`
-and `build/patcher-copy-01/browser-webkit-01/`.
+Receipts for the updated page are under `build/patcher-minimal-01/browser-brave-02/`
+and `build/patcher-minimal-01/browser-webkit-02/`.
 
 The original hardening evidence under `build/patcher-hardening-01/` includes
 51 independently generated bzip cases, 1,500 bounded deterministic mutations,

@@ -54,7 +54,7 @@
   fileInput.addEventListener('change', changed);
   patchInput.addEventListener('change', changed);
   cancel.addEventListener('click', () => {
-    stop(); clearResult(); message('Cancelled.');
+    stop(); clearResult(); message('');
   });
 
   $('form').addEventListener('submit', async event => {
@@ -94,11 +94,11 @@
           download.href = downloadURL;
           download.download = data.release.output_name;
           $('result-title').textContent = `${data.release.model} · ${data.release.revision}`;
-          $('result-size').textContent = `${(data.bytes.byteLength / 1024 / 1024).toFixed(2)} MiB · verified`;
+          $('result-size').textContent = `${(data.bytes.byteLength / 1024 / 1024).toFixed(2)} MiB`;
           $('source-hash').textContent = data.release.source_sha256;
           $('output-hash').textContent = data.sha256;
           result.hidden = false;
-          message('Done.');
+          message('');
           download.focus();
         } else if (data.type === 'error') {
           stop(); clearResult(); message(data.message, true);
