@@ -1,5 +1,6 @@
 """Offline release behavior; synthetic IPSWs contain no Apple firmware."""
 
+import bz2
 import hashlib
 import io
 import json
@@ -139,6 +140,79 @@ class ApplyTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.apply()
         self.assertFalse(self.output.exists())
+
+    def test_bsdiff_streams_reject_trailing_and_concatenated_data(self):
+        control_size = int.from_bytes(self.delta[8:16], "little")
+        diff_size = int.from_bytes(self.delta[16:24], "little")
+        end = 32 + control_size + diff_size
+        blocks = [
+            self.delta[32 : 32 + control_size],
+            self.delta[32 + control_size : end],
+            self.delta[end:],
+        ]
+        for index in range(3):
+            for suffix in (b"unused", bz2.compress(b"")):
+                with self.subTest(block=index, suffix=suffix):
+                    self.output = self.root / f"output-{index}-{len(suffix)}.ipsw"
+                    changed = blocks.copy()
+                    changed[index] += suffix
+                    self.delta = (
+                        b"BSDIFF40"
+                        + len(changed[0]).to_bytes(8, "little")
+                        + len(changed[1]).to_bytes(8, "little")
+                        + len(self.new).to_bytes(8, "little")
+                        + b"".join(changed)
+                    )
+                    self.manifest["patch"] = identity(self.delta)
+                    self.save()
+                    with self.assertRaises(ValueError):
+                        self.apply()
+                    self.assertFalse(self.output.exists())
+
+    def test_bsdiff_control_count_is_bounded(self):
+        control_size = int.from_bytes(self.delta[8:16], "little")
+        controls = bz2.compress(bytes(24) + bz2.decompress(self.delta[32 : 32 + control_size]))
+        self.delta = (
+            self.delta[:8]
+            + len(controls).to_bytes(8, "little")
+            + self.delta[16:32]
+            + controls
+            + self.delta[32 + control_size :]
+        )
+        self.manifest["patch"] = identity(self.delta)
+        self.save()
+        # A small limit exercises the real parser without a large fixture.
+        with patch.object(self.tool, "MAX_CONTROLS", 1, create=True):
+            with self.assertRaises(ValueError):
+                self.apply()
+        self.assertFalse(self.output.exists())
+
+    def test_archive_rejects_unsupported_compression_before_reading_members(self):
+        for method in (zipfile.ZIP_BZIP2, zipfile.ZIP_LZMA):
+            with self.subTest(method=method):
+                self.output = self.root / f"output-{method}.ipsw"
+                data = io.BytesIO()
+                with zipfile.ZipFile(data, "w", compression=method) as archive_file:
+                    archive_file.writestr("Firmware-test", self.old)
+                    archive_file.writestr("manifest.plist", b"<plist>unchanged</plist>")
+                self.source.write_bytes(data.getvalue())
+                self.manifest["source_archive"] = identity(data.getvalue())
+                self.save()
+                with self.assertRaises(ValueError):
+                    self.apply(firmware_only=True)
+                self.assertFalse(self.output.exists())
+
+    def test_archive_reads_have_an_explicit_output_limit(self):
+        original_read = zipfile.ZipExtFile.read
+
+        def bounded_read(stream, size=-1):
+            self.assertGreaterEqual(size, 0, "ZIP read must not request unlimited output")
+            self.assertLessEqual(size, self.tool.MAX_IMAGE + 1)
+            return original_read(stream, size)
+
+        with patch.object(zipfile.ZipExtFile, "read", bounded_read):
+            self.apply()
+        self.assertEqual(self.output.read_bytes(), self.expected)
 
     def test_existing_file_directory_and_symlink_are_preserved(self):
         self.output.write_bytes(b"keep me")

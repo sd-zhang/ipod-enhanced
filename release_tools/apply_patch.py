@@ -1,6 +1,7 @@
 """Apply a release patch to a stock IPSW file. Never accesses an iPod."""
 
 import argparse
+import bz2
 import copy
 import hashlib
 import io
@@ -15,6 +16,7 @@ from pathlib import Path
 FORMAT = "ipod-enhanced-bsdiff-v1"
 MAX_IMAGE = 32 * 1024 * 1024
 MAX_PATCH = 16 * 1024 * 1024
+MAX_CONTROLS = 65536
 
 
 def identity(data):
@@ -86,10 +88,51 @@ def read_archive(data, member):
             raise ValueError("Unsupported IPSW member list")
         infos = archive.infolist()
         for info, limit in zip(infos, (MAX_IMAGE, 16384)):
-            if info.file_size > limit or info.flag_bits & 1:
-                raise ValueError("Unsupported IPSW member size or encryption")
-        members = {info.filename: archive.read(info) for info in infos}
+            if (
+                info.file_size > limit
+                or info.flag_bits & 1
+                or info.compress_type not in (zipfile.ZIP_STORED, zipfile.ZIP_DEFLATED)
+            ):
+                raise ValueError("Unsupported IPSW member size, encryption or compression")
+        members = {}
+        for info in infos:
+            with archive.open(info) as stream:
+                data = stream.read(info.file_size + 1)
+            if len(data) != info.file_size:
+                raise ValueError("IPSW member size mismatch")
+            members[info.filename] = data
         return infos, members, archive.comment
+
+
+def read_delta(delta, expected_size):
+    """Decode each BSDIFF40 stream with a bound before allocating its output."""
+    if len(delta) < 32 or delta[:8] != b"BSDIFF40":
+        raise ValueError("Expected a BSDIFF40 patch")
+    control_size = int.from_bytes(delta[8:16], "little")
+    diff_size = int.from_bytes(delta[16:24], "little")
+    if delta[24:32] != expected_size.to_bytes(8, "little"):
+        raise ValueError("BSDIFF40 target size mismatch")
+    split = 32 + control_size
+    end = split + diff_size
+    if not control_size or not diff_size or end >= len(delta):
+        raise ValueError("Invalid BSDIFF40 stream sizes")
+    blocks = []
+    for compressed, limit in (
+        (delta[32:split], MAX_CONTROLS * 24),
+        (delta[split:end], expected_size),
+        (delta[end:], expected_size),
+    ):
+        decoder = bz2.BZ2Decompressor()
+        decoded = decoder.decompress(compressed, max_length=limit + 1)
+        if len(decoded) > limit or not decoder.eof or decoder.unused_data:
+            raise ValueError(
+                "BSDIFF40 stream exceeds its limit or contains incomplete/trailing data"
+            )
+        blocks.append(decoded)
+    control, diff, extra = blocks
+    if len(control) % 24 or len(diff) + len(extra) != expected_size:
+        raise ValueError("Invalid BSDIFF40 control or output size")
+    return control, diff, extra
 
 
 def repack(infos, members, comment):
@@ -131,11 +174,7 @@ def apply_bundle(bundle, source, output, *, firmware_only=False):
     require_identity(original, manifest["source_firmware"], "Stock firmware member")
     delta = checked_read(Path(bundle) / "firmware.bsdiff", MAX_PATCH)
     require_identity(delta, manifest["patch"], "Patch")
-    if len(delta) < 32 or delta[:8] != b"BSDIFF40":
-        raise ValueError("Expected a BSDIFF40 patch")
     expected_size = manifest["target_firmware"]["size"]
-    if delta[24:32] != expected_size.to_bytes(8, "little"):
-        raise ValueError("BSDIFF40 target size mismatch")
     try:
         import bsdiff4
     except ImportError as exc:
@@ -143,7 +182,9 @@ def apply_bundle(bundle, source, output, *, firmware_only=False):
             "Install the bundled requirements.txt in a Python virtual environment first"
         ) from exc
     try:
-        firmware = bsdiff4.patch(original, delta)
+        # The pinned core checks control ranges and source arithmetic. Decode
+        # here because bsdiff4.patch() expands the streams without output caps.
+        firmware = bsdiff4.core.patch(original, *read_delta(delta, expected_size))
     except Exception as exc:
         raise ValueError("Invalid BSDIFF40 patch") from exc
     require_identity(firmware, manifest["target_firmware"], "Patched firmware member")

@@ -182,6 +182,13 @@ device requests and needs no administrator privileges; dependency installation
 may download a package. Use a local filesystem supporting hard links, such as
 APFS, NTFS or ext4. FAT/exFAT output is unsupported by atomic publication.
 
+ZIP member reads have explicit output limits and accept only stored or deflated
+members. BSDIFF streams are decoded with output caps before entering the pinned
+native patch routine: at most 65,536 control records, with diff and extra data
+bounded by the declared firmware size. Incomplete, trailing or concatenated
+bzip streams are rejected. This avoids the dependency's unbounded decompression
+wrapper while retaining its checked native patch application.
+
 The delta patches the uncompressed `Firmware-*` member inside the IPSW. Exact
 archive reconstruction depends on reproducible ZIP compression. A different
 compression implementation fails without publishing output. `--firmware-only`
