@@ -3,14 +3,14 @@ const assert = require('node:assert/strict');
 const fixture = require('./test-fixture.json');
 
 module.exports = async function checkSecurity(page, checks, requests) {
-  await page.getByLabel('Stock IPSW', { exact: true }).setInputFiles({
+  await page.getByLabel('IPSW', { exact: true }).setInputFiles({
     name: 'fixture.ipsw', mimeType: 'application/zip', buffer: Buffer.from(fixture.stock, 'base64'),
   });
   for (const [name, data] of Object.entries(fixture.hostile_patches)) {
-    await page.getByLabel('Patch (.ipepatch)', { exact: true }).setInputFiles({
+    await page.getByLabel('Patch', { exact: true }).setInputFiles({
       name: `${name}.ipepatch`, mimeType: 'application/zip', buffer: Buffer.from(data, 'base64'),
     });
-    await page.getByRole('button', { name: 'Apply patch', exact: true }).click();
+    await page.getByRole('button', { name: 'Apply', exact: true }).click();
     await page.waitForFunction(() => document.getElementById('status').classList.contains('error'));
     assert.equal(await page.locator('#result').isVisible(), false);
     assert.equal(await page.locator('#download').getAttribute('href'), null);

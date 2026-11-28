@@ -80,8 +80,8 @@ exact stock image to a complete OEM+ release; start from stock for every update.
 
 ### Browser patcher
 
-Open the generated `index.html`, select the **Stock IPSW** and
-**Patch (.ipepatch)**, then click **Apply patch**. The patch
+Open the generated `index.html`, select the stock **IPSW** and
+`.ipepatch` **Patch**, then click **Apply**. The patch
 supplies its model and revision. The download appears only after the source,
 delta, firmware member and complete rebuilt IPSW match the patch's hashes.
 Changing either input, cancelling or restoring the page clears the previous

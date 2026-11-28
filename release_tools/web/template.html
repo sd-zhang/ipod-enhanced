@@ -12,17 +12,15 @@
 <body>
   <main>
     <header>
-      <h1>iPod Enhanced patcher</h1>
+      <h1>iPod Enhanced</h1>
     </header>
     <form id="form" aria-busy="false">
-      <label for="firmware">Stock IPSW</label>
-      <input id="firmware" type="file" accept=".ipsw,application/zip" aria-describedby="firmware-help">
-      <p id="firmware-help" class="hint"><a href="https://github.com/sd-zhang/ipod-enhanced#tested-compatibility" rel="noreferrer" target="_blank">Firmware downloads</a></p>
-      <label for="patch-file">Patch (.ipepatch)</label>
-      <input id="patch-file" type="file" accept=".ipepatch" aria-describedby="patch-help">
-      <p id="patch-help" class="hint"><a href="https://github.com/sd-zhang/ipod-enhanced/releases" rel="noreferrer" target="_blank">Patch downloads</a></p>
+      <label for="firmware">IPSW</label>
+      <input id="firmware" type="file" accept=".ipsw,application/zip">
+      <label for="patch-file">Patch</label>
+      <input id="patch-file" type="file" accept=".ipepatch">
       <div class="actions">
-        <button id="patch" type="submit" disabled>Apply patch</button>
+        <button id="patch" type="submit" disabled>Apply</button>
         <button id="cancel" type="button" class="secondary" hidden>Cancel</button>
       </div>
       <progress id="progress" aria-label="Patching firmware" hidden></progress>
@@ -37,13 +35,10 @@
         <dl><dt>Original IPSW</dt><dd id="source-hash"></dd><dt>Patched IPSW</dt><dd id="output-hash"></dd></dl>
       </details>
     </section>
-    <aside class="notes">
-      <p>Local processing. No uploads.</p>
-      <p>Developer preview. Installer not included.</p>
-    </aside>
     <footer>
-      <nav aria-label="Project links"><a href="https://github.com/sd-zhang/ipod-enhanced" rel="noreferrer" target="_blank">GitHub</a><a href="https://github.com/sd-zhang/ipod-enhanced/blob/main/docs/USER_GUIDE.md" rel="noreferrer" target="_blank">User guide</a></nav>
-      <p>Uses <a href="https://github.com/marcrobledo/RomPatcher.js" rel="noreferrer" target="_blank">Rom Patcher JS</a>.</p>
+      <a href="https://github.com/sd-zhang/ipod-enhanced#tested-compatibility" rel="noreferrer" target="_blank">IPSWs</a>
+      <a href="https://github.com/sd-zhang/ipod-enhanced/releases" rel="noreferrer" target="_blank">Patches</a>
+      <a href="https://github.com/sd-zhang/ipod-enhanced" rel="noreferrer" target="_blank">GitHub</a>
       <details><summary>Licenses</summary>{{LICENSES}}</details>
     </footer>
     <noscript><p class="error">JavaScript required.</p></noscript>
