@@ -120,13 +120,15 @@ firmware payloads or release catalog; future compatible patches do not require
 a site rebuild. It runs as local HTML or on static HTTPS hosting.
 
 ```text
-build/release-prep-01/site-01/index.html
-Size: 114,076 bytes
-SHA-256: 7f749e74f315688ae74a24544f4f4202c4e608dbd7a41b0ae1e588f7109e4aa5
+build/patcher-polish-01/site-01/index.html
+Size: 112,624 bytes
+SHA-256: ab039602f9624b0d17070c876c6c9716b4f4a35a4d98b525fdb55f96b75b003b
 ```
 
-The page is byte-identical to the previously hardened build. Source, delta,
-firmware member and final archive hashes must all match. Uploaded metadata is
+The page uses a compact form with native file inputs and links to compatible
+Apple IPSWs and project patches. This presentation update leaves the patching
+code and security policy unchanged. Source, delta, firmware member and final
+archive hashes must all match. Uploaded metadata is
 text, not executable code. Strict ZIP/BSDIFF/bzip validation bounds allocation
 and work; the page policy blocks injected scripts, frames and runtime network
 requests. Vendor provenance and corrections are in
@@ -138,13 +140,14 @@ and covered wrong inputs, corruption, cancellation, stale downloads, mobile-widt
 layout and enforced browser security policy. No HTTP requests or application
 errors occurred; deliberate policy violations have separate expected diagnostics.
 This is browser-engine coverage on macOS, not Windows/Linux/mobile device testing.
-Receipts are under `build/release-prep-01/browser-brave-01/` and
-`build/release-prep-01/browser-webkit-01/`.
+Receipts for the updated page are under `build/patcher-polish-01/browser-brave-01/`
+and `build/patcher-polish-01/browser-webkit-02/`. Additional layout checks cover
+keyboard order and expanded license text at 320, 375 and 1000 pixels wide.
 
 The original hardening evidence under `build/patcher-hardening-01/` includes
 51 independently generated bzip cases, 1,500 bounded deterministic mutations,
 regressions for malformed Huffman tables and signed BSDIFF movement, and exact
-source rebuilds. The current source-only Pages build also reproduces the page
+source rebuilds. The source-only Pages build produces the page
 without Apple files or patches. [Publishing instructions](BUILDING.md#publishing-patches-and-the-web-app)
 cover the manual workflow and separate patch assets.
 

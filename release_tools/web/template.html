@@ -12,49 +12,39 @@
 <body>
   <main>
     <header>
-      <p class="eyebrow">FIRMWARE PATCHER</p>
-      <h1>iPod Enhanced</h1>
-      <p class="intro">A few thoughtful additions to the iPod you know.</p>
+      <h1>iPod Enhanced patcher</h1>
+      <p>Apply a patch to your original firmware. Your files stay on your computer.</p>
     </header>
-    <section class="panel" aria-labelledby="patch-title">
-      <div class="panel-heading">
-        <h2 id="patch-title">Create your firmware</h2>
-        <p>Your files stay in this browser. Nothing is uploaded.</p>
+    <form id="form" aria-busy="false">
+      <label for="firmware">Original Apple firmware</label>
+      <input id="firmware" type="file" accept=".ipsw,application/zip" aria-describedby="firmware-help">
+      <p id="firmware-help" class="hint">An unmodified <code>.ipsw</code>. <a href="https://github.com/sd-zhang/ipod-enhanced#tested-compatibility" rel="noreferrer" target="_blank">Compatible models and Apple downloads</a></p>
+      <label for="patch-file">Enhanced patch</label>
+      <input id="patch-file" type="file" accept=".ipepatch" aria-describedby="patch-help">
+      <p id="patch-help" class="hint">The <code>.ipepatch</code> for your model. <a href="https://github.com/sd-zhang/ipod-enhanced/releases" rel="noreferrer" target="_blank">Download patches</a></p>
+      <div class="actions">
+        <button id="patch" type="submit" disabled>Create patched IPSW</button>
+        <button id="cancel" type="button" class="secondary" hidden>Cancel</button>
       </div>
-      <form id="form" aria-busy="false">
-        <label for="firmware">Original Apple firmware</label>
-        <div class="file-well"><input id="firmware" type="file" accept=".ipsw,application/zip" aria-describedby="firmware-help"></div>
-        <p id="firmware-help" class="hint">Choose the stock <span class="extension">.ipsw</span> for your iPod. Keep your original file.</p>
-        <label for="patch-file">Enhanced patch</label>
-        <div class="file-well"><input id="patch-file" type="file" accept=".ipepatch" aria-describedby="patch-help"></div>
-        <p id="patch-help" class="hint">Choose an <span class="extension">.ipepatch</span> from a source you trust. The patch identifies the model and release.</p>
-        <div class="actions">
-          <button id="patch" type="submit" disabled>Create patched IPSW</button>
-          <button id="cancel" type="button" class="secondary" hidden>Cancel</button>
-        </div>
-        <progress id="progress" aria-label="Patching firmware" hidden></progress>
-        <p id="status" role="status" aria-live="polite">Choose an original Apple IPSW and an Enhanced patch to begin.</p>
-      </form>
-      <section id="result" class="result" aria-labelledby="result-title" hidden>
-        <h3 id="result-title"></h3>
-        <p id="result-size" class="hint"></p>
-        <a id="download" class="button">Download patched IPSW</a>
-        <details class="verification">
-          <summary>Verification details</summary>
-          <dl><dt>Original IPSW · SHA-256</dt><dd id="source-hash"></dd><dt>Patched IPSW · matches patch SHA-256</dt><dd id="output-hash"></dd></dl>
-        </details>
-      </section>
+      <progress id="progress" aria-label="Patching firmware" hidden></progress>
+      <p id="status" role="status" aria-live="polite">Choose an original Apple IPSW and an Enhanced patch to begin.</p>
+    </form>
+    <section id="result" class="result" aria-labelledby="result-title" hidden>
+      <h2 id="result-title"></h2>
+      <p id="result-size" class="hint"></p>
+      <a id="download" class="button">Download patched IPSW</a>
+      <details class="verification">
+        <summary>Verification details</summary>
+        <dl><dt>Original IPSW · SHA-256</dt><dd id="source-hash"></dd><dt>Patched IPSW · matches patch SHA-256</dt><dd id="output-hash"></dd></dl>
+      </details>
     </section>
     <aside class="notes">
-      <details>
-        <summary>Which original firmware do I need?</summary>
-        <p>Use the original Apple IPSW required by your patch. The patcher checks the exact file before making changes.</p>
-        <p>Use an unmodified stock file, including when updating from an older Enhanced release. Renaming a file does not change whether it matches.</p>
-      </details>
-      <p class="installation">This creates a firmware file. Installing it on your iPod is a separate step. These releases are developer previews; a public installation workflow has not been validated.</p>
+      <p>Start from the original Apple IPSW each time, including when updating. The patcher checks the file's checksum before applying a patch.</p>
+      <p>This creates a file; it does not install firmware on your iPod. These are developer previews, with no validated public installation method.</p>
     </aside>
     <footer>
-      <p>Powered by <a href="https://github.com/marcrobledo/RomPatcher.js" rel="noreferrer">Rom Patcher JS</a>.</p>
+      <nav aria-label="Project links"><a href="https://github.com/sd-zhang/ipod-enhanced" rel="noreferrer" target="_blank">GitHub</a><a href="https://github.com/sd-zhang/ipod-enhanced/blob/main/docs/USER_GUIDE.md" rel="noreferrer" target="_blank">User guide</a></nav>
+      <p>Uses <a href="https://github.com/marcrobledo/RomPatcher.js" rel="noreferrer" target="_blank">Rom Patcher JS</a>.</p>
       <details><summary>Open-source licenses</summary>{{LICENSES}}</details>
       <p class="fine-print">Independent project. Not affiliated with Apple.</p>
     </footer>
